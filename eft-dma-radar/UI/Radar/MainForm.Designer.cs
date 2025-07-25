@@ -98,6 +98,7 @@ namespace eft_dma_radar.UI.Radar
             checkBox_ShowMines = new CheckBox();
             checkBox_TeammateAimlines = new CheckBox();
             checkBox_AIAimlines = new CheckBox();
+            checkBox_DetectNVG = new CheckBox();
             flowLayoutPanel5 = new FlowLayoutPanel();
             flowLayoutPanel_Loot_Containers = new FlowLayoutPanel();
             label31 = new Label();
@@ -791,10 +792,11 @@ namespace eft_dma_radar.UI.Radar
             flowLayoutPanel_RadarSettings.Controls.Add(checkBox_ShowMines);
             flowLayoutPanel_RadarSettings.Controls.Add(checkBox_TeammateAimlines);
             flowLayoutPanel_RadarSettings.Controls.Add(checkBox_AIAimlines);
+            flowLayoutPanel_RadarSettings.Controls.Add(checkBox_DetectNVG);
             flowLayoutPanel_Settings.SetFlowBreak(flowLayoutPanel_RadarSettings, true);
             flowLayoutPanel_RadarSettings.Location = new Point(3, 3);
             flowLayoutPanel_RadarSettings.Name = "flowLayoutPanel_RadarSettings";
-            flowLayoutPanel_RadarSettings.Size = new Size(1081, 161);
+            flowLayoutPanel_RadarSettings.Size = new Size(1196, 161);
             flowLayoutPanel_RadarSettings.TabIndex = 0;
             // 
             // label2
@@ -1186,6 +1188,18 @@ namespace eft_dma_radar.UI.Radar
             checkBox_AIAimlines.UseVisualStyleBackColor = true;
             checkBox_AIAimlines.CheckedChanged += checkBox_AIAimlines_CheckedChanged;
             // 
+            // checkBox_DetectNVG
+            // 
+            checkBox_DetectNVG.AutoSize = true;
+            checkBox_DetectNVG.Location = new Point(1080, 137);
+            checkBox_DetectNVG.Name = "checkBox_DetectNVG";
+            checkBox_DetectNVG.Size = new Size(111, 19);
+            checkBox_DetectNVG.TabIndex = 65;
+            checkBox_DetectNVG.Text = "Detect No NVGs";
+            toolTip1.SetToolTip(checkBox_DetectNVG, "When enabled, between the times 7:00PM and 6:00AM if a PMC is not wearing Night Vision the identifer !! NO NVG !! is appended to their username (Radar & Fuser)");
+            checkBox_DetectNVG.UseVisualStyleBackColor = true;
+            checkBox_DetectNVG.CheckedChanged += checkBox_DetectNVG_CheckedChanged;
+            // 
             // flowLayoutPanel5
             // 
             flowLayoutPanel5.AutoSize = true;
@@ -1517,7 +1531,7 @@ namespace eft_dma_radar.UI.Radar
             flowLayoutPanel_Settings.SetFlowBreak(flowLayoutPanel_MemWrites, true);
             flowLayoutPanel_MemWrites.Location = new Point(3, 427);
             flowLayoutPanel_MemWrites.Name = "flowLayoutPanel_MemWrites";
-            flowLayoutPanel_MemWrites.Size = new Size(1144, 396);
+            flowLayoutPanel_MemWrites.Size = new Size(1196, 371);
             flowLayoutPanel_MemWrites.TabIndex = 1;
             // 
             // label3
@@ -4353,6 +4367,7 @@ namespace eft_dma_radar.UI.Radar
         private CheckBox checkBox_ImportantPlayer;
         private CheckBox checkBox_ESP_LootMenu;
         private CheckBox checkBox_InstantPlant;
+        private CheckBox checkBox_DetectNVG;
     }
 }
 
