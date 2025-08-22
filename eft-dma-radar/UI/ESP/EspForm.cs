@@ -326,7 +326,8 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAYAAACG+vy+AAB680lEQVR4nO19CZhU5ZV23a1u7UtX740g
             {
                 "HIGHEST VALUE",
                 " QUEST ITEMS ",
-                "   WISHLIST  "
+                "   WISHLIST  ",
+                "  IMPORTANT  "
             };
             ;
             canvas.DrawText(LootHeaders[((int?)Config.ESP.LootHeaderIndex ?? 0)],
@@ -334,6 +335,8 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAYAAACG+vy+AAB680lEQVR4nO19CZhU5ZV23a1u7UtX740g
 
             float lineSpacing = 22.5f * scale;
             float textStartX = x - 28f * scale;
+
+            LootItem cachedItem = null;
 
             switch (Config.ESP.LootHeaderIndex)
             {
@@ -344,6 +347,8 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAYAAACG+vy+AAB680lEQVR4nO19CZhU5ZV23a1u7UtX740g
                     foreach (var item in items)
                     {
                         bool isSelected = lootCount == Config.ESP.LootScrollIndex;
+                        if(cachedItem is not  null && isSelected)
+                            cachedItem = item;
                         var paintToUse = isSelected && Config.ESP.DrawLootSnapline ? SKPaints.TextPMCESP : SKPaints.TextImpLootESP;
 
                         canvas.DrawText($"{(isSelected ? ">  " : "")}{item.ShortName} {(item.Count > 1 ? $"[{item.Count}]" : "")}" + " {" + TarkovMarketItem.FormatPrice(item.FlatPrice) + "} " + $"(H: {(int)Math.Round(item.Position.Y - localPlayer.Position.Y)} D: {Utils.GetDistPretty(localPlayer.Position, item.Position)})",
@@ -475,6 +480,33 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAYAAACG+vy+AAB680lEQVR4nO19CZhU5ZV23a1u7UtX740g
                         }
 
                         wishCount++;
+                    }
+                    break;
+
+                case LootHeaderMode.Important:
+                    int impCount = 1;
+                    var impLoot = Memory.Loot.UnfilteredLoot
+                        .Where(x => x.IsImportant && !x.IsWishlisted)
+                        .OrderBy(x => Vector3.Distance(localPlayer.Position, x.Position))
+                        .ToList();
+                    Config.ESP.MaxImportantItemsNum = impLoot.Count;
+                    foreach (var item in impLoot)
+                    {
+                        bool isSelected = impCount == Config.ESP.LootScrollIndex;
+                        var paintToUse = isSelected && Config.ESP.DrawLootSnapline ? SKPaints.TextPMCESP : SKPaints.TextImpLootESP;
+                        canvas.DrawText(
+                            $"{(isSelected ? ">  " : "")}{item.ShortName} {(item.Count > 1 ? $"[{item.Count}]" : "")}" +
+                            $"(H: {(int)Math.Round(item.Position.Y - LocalPlayer.Position.Y)} D: {Utils.GetDistPretty(LocalPlayer.Position, item.Position)})",
+                            new SKPoint(textStartX, (y + 125f * scale) + (impCount * lineSpacing)),
+                            paintToUse);
+                        if (isSelected && Config.ESP.DrawLootSnapline)
+                        {
+                            if (CameraManagerBase.WorldToScreen(ref item.Position, out var targetScrPos, true))
+                            {
+                                canvas.DrawLine(targetScrPos, new SKPoint(CameraManagerBase.Viewport.Width / 2, CameraManagerBase.Viewport.Height), ESPLine_Width(2f * scale));
+                            }
+                        }
+                        impCount++;
                     }
                     break;
             }
@@ -779,6 +811,8 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAYAAACG+vy+AAB680lEQVR4nO19CZhU5ZV23a1u7UtX740g
                 foreach (var item in loot)
                 {
                     if (Config.ESP.ShowOnlyWishlist && !item.IsWishlisted) 
+                        continue;
+                    if (Config.ESP.ShowOnlyImportantLoot && (!item.IsImportant || item.IsWishlisted))
                         continue;
                     item.DrawESP(canvas, localPlayer);
                 }
