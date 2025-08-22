@@ -1667,7 +1667,7 @@ namespace eft_dma_radar.UI.Radar
             checkBox_InstantPlant.TabIndex = 81;
             checkBox_InstantPlant.Text = "Instant Plant";
             checkBox_InstantPlant.UseVisualStyleBackColor = true;
-            checkBox_InstantPlant.CheckedChanged += checkBox2_CheckedChanged_3;
+            checkBox_InstantPlant.CheckedChanged += checkBox_InstantPlant_CheckedChanged;
             // 
             // checkBox_InfStamina
             // 
